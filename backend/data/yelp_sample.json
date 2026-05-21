@@ -1,0 +1,149 @@
+{
+  "users": [
+    {
+      "userId": "u_tunde",
+      "name": "Tunde A.",
+      "reviews": [
+        {
+          "businessName": "Yellow Chilli",
+          "stars": 5,
+          "text": "Mehn, the jollof rice here is on point! Smoky, well-seasoned and the portion is generous. Service was a bit slow but the food made up for it. I'll definitely come back.",
+          "categories": ["Nigerian", "Restaurant", "Local Cuisine"]
+        },
+        {
+          "businessName": "Cactus Restaurant",
+          "stars": 4,
+          "text": "Solid breakfast spot. Their pancakes are fluffy and the akara is crispy outside, soft inside. A bit pricey but worth it for a weekend treat.",
+          "categories": ["Breakfast", "Restaurant", "Brunch"]
+        },
+        {
+          "businessName": "RSVP Lagos",
+          "stars": 3,
+          "text": "The vibe is great, music was nice but the food was just okay. Their pasta needs more flavour, abeg. I'd come back for drinks though.",
+          "categories": ["Lounge", "Restaurant", "Bar"]
+        },
+        {
+          "businessName": "Bukka Hut",
+          "stars": 4,
+          "text": "Quick, affordable Nigerian food. The amala and ewedu hits different when you're hungry after work. Sitting space is small but the food delivers.",
+          "categories": ["Nigerian", "Fast Food", "Local Cuisine"]
+        },
+        {
+          "businessName": "Terra Kulture",
+          "stars": 5,
+          "text": "Love this place. The egusi soup is rich and authentic, plus you get culture and art on the side. Easily one of my favourite spots in VI.",
+          "categories": ["Nigerian", "Restaurant", "Cultural"]
+        }
+      ]
+    },
+    {
+      "userId": "u_amaka",
+      "name": "Amaka O.",
+      "reviews": [
+        {
+          "businessName": "Cafe Neo",
+          "stars": 4,
+          "text": "Good coffee, reliable WiFi, comfortable for working. Their chicken sandwich is decent. Gets crowded on weekends so come early.",
+          "categories": ["Cafe", "Coffee", "Coworking"]
+        },
+        {
+          "businessName": "Hard Rock Cafe Lagos",
+          "stars": 3,
+          "text": "Nice ambience and the view of the beach is amazing. Food is overpriced for what you get, but the experience is decent for a date night.",
+          "categories": ["Restaurant", "American", "Bar"]
+        },
+        {
+          "businessName": "Spice Route",
+          "stars": 5,
+          "text": "Best Indian food in Lagos, hands down. The butter chicken is creamy and full of flavour. Their naan is fresh. Service was attentive.",
+          "categories": ["Indian", "Restaurant", "Fine Dining"]
+        },
+        {
+          "businessName": "Shoprite Ikeja",
+          "stars": 2,
+          "text": "Long queues at checkout almost every time. Selection is okay but the experience can be frustrating. They need more cashiers, on God.",
+          "categories": ["Grocery", "Supermarket", "Retail"]
+        }
+      ]
+    },
+    {
+      "userId": "u_chinedu",
+      "name": "Chinedu E.",
+      "reviews": [
+        {
+          "businessName": "The Place",
+          "stars": 4,
+          "text": "Fast service. The fried rice and chicken combo never disappoints. Affordable and filling.",
+          "categories": ["Nigerian", "Fast Food"]
+        },
+        {
+          "businessName": "Sailors Lounge",
+          "stars": 5,
+          "text": "Vibes were crazy! Suya was peppery just how I like it, drinks flowed all night. Best Friday night I've had in a minute.",
+          "categories": ["Lounge", "Bar", "Nightlife"]
+        },
+        {
+          "businessName": "Domino's Pizza Lekki",
+          "stars": 3,
+          "text": "Pizza was alright. Delivery took longer than expected. Cheese could be more generous for the price sef.",
+          "categories": ["Pizza", "Fast Food", "Delivery"]
+        }
+      ]
+    },
+    {
+      "userId": "u_blessing",
+      "name": "Blessing K.",
+      "reviews": [
+        {
+          "businessName": "Nkoyo",
+          "stars": 5,
+          "text": "Authentic afang soup that reminds me of home. Owner is super warm. Will recommend to anyone who wants real Nigerian flavours.",
+          "categories": ["Nigerian", "Restaurant", "Local Cuisine"]
+        },
+        {
+          "businessName": "Crust & Cream",
+          "stars": 4,
+          "text": "Their ice cream is creamy and the waffles are great. A bit small space-wise but cosy. Good for a quick date.",
+          "categories": ["Dessert", "Ice Cream", "Cafe"]
+        }
+      ]
+    },
+    {
+      "userId": "u_new",
+      "name": "New User",
+      "reviews": []
+    }
+  ],
+  "businesses": [
+    {
+      "name": "Yellow Chilli Lagos",
+      "category": "Nigerian Restaurant",
+      "description": "Upscale Nigerian cuisine in Victoria Island, known for jollof rice and seafood.",
+      "location": "Victoria Island, Lagos"
+    },
+    {
+      "name": "Nok by Alara",
+      "category": "Pan-African Restaurant",
+      "description": "Trendy pan-African dining experience with curated cocktails.",
+      "location": "Victoria Island, Lagos"
+    },
+    {
+      "name": "Cafe Neo Lekki",
+      "category": "Cafe",
+      "description": "Coffee shop and coworking space with strong WiFi and decent pastries.",
+      "location": "Lekki Phase 1, Lagos"
+    },
+    {
+      "name": "Sky Restaurant & Lounge",
+      "category": "Lounge",
+      "description": "Rooftop lounge with great views of the Lagos skyline and a fusion menu.",
+      "location": "Ikoyi, Lagos"
+    },
+    {
+      "name": "Bukka Hut Surulere",
+      "category": "Nigerian Fast Food",
+      "description": "Affordable, fast Nigerian comfort food. Known for amala and ewedu.",
+      "location": "Surulere, Lagos"
+    }
+  ]
+}
