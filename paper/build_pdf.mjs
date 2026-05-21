@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
  * Tiny zero-dependency markdown -> HTML renderer for the Rems solution paper.
- * Just enough markdown features for this specific document — not a general
- * markdown engine. Run with: node paper/build_pdf.mjs
+ * Run with: node paper/build_pdf.mjs
  */
 
 import fs from 'node:fs';
@@ -22,20 +21,16 @@ function esc(s) {
 }
 
 function inline(s) {
-  // code spans first so we don't mangle them
   s = s.replace(/`([^`]+)`/g, (_, c) => `<code>${esc(c)}</code>`);
-  // links
   s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, h) => `<a href="${h}">${t}</a>`);
-  // bold
   s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  // italic (avoid eating bold leftovers)
   s = s.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>');
   return s;
 }
 
 function renderTable(rows) {
   const head = rows[0];
-  const body = rows.slice(2); // skip separator row
+  const body = rows.slice(2);
   const ths = head.map((c) => `<th>${inline(esc(c))}</th>`).join('');
   const trs = body
     .map(
@@ -68,7 +63,6 @@ function render(md) {
   while (i < lines.length) {
     const line = lines[i];
 
-    // Headings
     const h = /^(#{1,6})\s+(.*)$/.exec(line);
     if (h) {
       const lvl = h[1].length;
@@ -77,26 +71,38 @@ function render(md) {
       continue;
     }
 
-    // Horizontal rule
     if (/^---+\s*$/.test(line)) {
       out.push('<hr>');
       i++;
       continue;
     }
 
-    // Image: ![alt](path)
     const img = /^!\[([^\]]*)\]\(([^)]+)\)\s*$/.exec(line);
     if (img) {
-      const alt = img[1];
-      const src = img[2];
-      out.push(
-        `<figure class="fig"><img src="${src}" alt="${esc(alt)}"><figcaption>${inline(esc(alt))}</figcaption></figure>`
-      );
+      const imgs = [{ alt: img[1], src: img[2] }];
+      while (i + 1 < lines.length) {
+        const next = /^!\[([^\]]*)\]\(([^)]+)\)\s*$/.exec(lines[i + 1]);
+        if (!next) break;
+        i++;
+        imgs.push({ alt: next[1], src: next[2] });
+      }
+      if (imgs.length === 1) {
+        out.push(
+          `<figure class="fig"><img src="${imgs[0].src}" alt="${esc(imgs[0].alt)}"><figcaption>${inline(esc(imgs[0].alt))}</figcaption></figure>`
+        );
+      } else {
+        out.push('<div class="fig-grid">');
+        for (const im of imgs) {
+          out.push(
+            `<figure class="fig fig-compact"><img src="${im.src}" alt="${esc(im.alt)}"><figcaption>${inline(esc(im.alt))}</figcaption></figure>`
+          );
+        }
+        out.push('</div>');
+      }
       i++;
       continue;
     }
 
-    // Code block
     if (/^```/.test(line)) {
       i++;
       const buf = [];
@@ -104,12 +110,11 @@ function render(md) {
         buf.push(lines[i]);
         i++;
       }
-      i++; // closing fence
+      i++;
       out.push(`<pre><code>${esc(buf.join('\n'))}</code></pre>`);
       continue;
     }
 
-    // Table
     if (line.startsWith('|') && lines[i + 1] && /^\|[\s|:-]+\|?$/.test(lines[i + 1])) {
       const rows = [];
       while (i < lines.length && lines[i].startsWith('|')) {
@@ -120,7 +125,6 @@ function render(md) {
       continue;
     }
 
-    // Bullet list
     if (/^[-*]\s+/.test(line)) {
       const items = [];
       while (i < lines.length && /^[-*]\s+/.test(lines[i])) {
@@ -135,7 +139,6 @@ function render(md) {
       continue;
     }
 
-    // Ordered list
     if (/^\d+\.\s+/.test(line)) {
       const items = [];
       while (i < lines.length && /^\d+\.\s+/.test(lines[i])) {
@@ -150,7 +153,6 @@ function render(md) {
       continue;
     }
 
-    // Paragraph (one or more non-blank lines)
     if (line.trim() === '') {
       i++;
       continue;
@@ -171,12 +173,12 @@ function render(md) {
 }
 
 const PRINT_CSS = `
-  @page { size: Letter; margin: 0.85in 0.95in; }
+  @page { size: Letter; margin: 0.72in 0.8in; }
   * { box-sizing: border-box; }
   body {
     font-family: 'Source Serif Pro', Georgia, 'Times New Roman', serif;
-    font-size: 10.5pt;
-    line-height: 1.55;
+    font-size: 10.25pt;
+    line-height: 1.48;
     color: #111;
     max-width: 7in;
     margin: 0 auto;
@@ -184,120 +186,87 @@ const PRINT_CSS = `
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
     color: #0a0a0a;
-    line-height: 1.25;
+    line-height: 1.2;
     letter-spacing: -0.01em;
-    margin-top: 1.4em;
-    margin-bottom: 0.4em;
+    margin-top: 0.9em;
+    margin-bottom: 0.25em;
   }
   h1 {
-    font-size: 22pt;
+    font-size: 20pt;
     margin-top: 0;
-    color: #0a0a0a;
     border-bottom: 2px solid #10b981;
-    padding-bottom: 0.3em;
+    padding-bottom: 0.25em;
   }
-  h2 {
-    font-size: 14pt;
-    margin-top: 1.6em;
-    color: #0a0a0a;
-  }
-  h3 {
-    font-size: 11.5pt;
-    color: #0a0a0a;
-  }
-  h4 { font-size: 11pt; color: #047857; font-style: italic; font-weight: 600; }
-  p { margin: 0 0 0.7em; text-align: justify; }
-  ul, ol { margin: 0 0 0.7em 1.2em; padding: 0; }
-  li { margin-bottom: 0.25em; }
-  hr {
-    border: none;
-    border-top: 1px solid #d4d4d8;
-    margin: 1.5em 0;
-  }
-  a { color: #047857; text-decoration: none; border-bottom: 1px solid #a7f3d0; }
+  h2 { font-size: 12.5pt; margin-top: 1.1em; }
+  h3 { font-size: 10.5pt; }
+  h4 { font-size: 10pt; color: #047857; font-style: italic; font-weight: 600; }
+  p { margin: 0 0 0.45em; text-align: justify; }
+  ul, ol { margin: 0 0 0.45em 1.1em; padding: 0; }
+  li { margin-bottom: 0.15em; }
+  hr { border: none; border-top: 1px solid #d4d4d8; margin: 0.7em 0; }
+  a { color: #047857; text-decoration: none; }
   strong { color: #0a0a0a; }
   em { color: #404040; }
   code {
     font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
-    font-size: 9pt;
+    font-size: 8.5pt;
     background: #f5f5f4;
-    color: #0a0a0a;
-    padding: 1px 4px;
+    padding: 1px 3px;
     border-radius: 3px;
   }
   pre {
     background: #fafaf9;
     border: 1px solid #e7e5e4;
-    border-radius: 6px;
-    padding: 12px 14px;
-    overflow-x: auto;
-    margin: 0.8em 0 1em;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin: 0.4em 0 0.6em;
     page-break-inside: avoid;
   }
-  pre code {
-    background: transparent;
-    padding: 0;
-    font-size: 9pt;
-    line-height: 1.45;
-    color: #1c1917;
-  }
+  pre code { background: transparent; padding: 0; font-size: 8pt; line-height: 1.35; }
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0.6em 0 1.2em;
-    font-size: 9.5pt;
+    margin: 0.35em 0 0.6em;
+    font-size: 9pt;
     page-break-inside: avoid;
   }
-  th, td {
-    border: 1px solid #e7e5e4;
-    padding: 7px 10px;
-    text-align: left;
-    vertical-align: top;
-  }
+  th, td { border: 1px solid #e7e5e4; padding: 4px 7px; text-align: left; vertical-align: top; }
   th {
     background: #f5f5f4;
-    color: #0a0a0a;
     font-family: 'Inter', sans-serif;
-    font-size: 9pt;
+    font-size: 8pt;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
-  /* Title block on page 1 */
-  h1 + h3 {
-    font-size: 12pt;
-    margin-top: 0.1em;
-    color: #404040;
-    font-weight: 500;
-    font-style: italic;
-  }
-  /* Section anchors don't break across pages awkwardly */
-  h2 { page-break-after: avoid; }
-  h3 { page-break-after: avoid; }
-  figure.fig {
-    margin: 0.8em 0 1.2em;
-    page-break-inside: avoid;
-    text-align: center;
-  }
+  h1 + h3 { font-size: 11pt; margin-top: 0.05em; color: #404040; font-weight: 500; font-style: italic; }
+  h2, h3 { page-break-after: avoid; }
+  figure.fig { margin: 0.35em 0 0.5em; page-break-inside: avoid; }
   figure.fig img {
     display: block;
     max-width: 100%;
-    max-height: 2.75in;
+    max-height: 2.2in;
     margin: 0 auto;
     object-fit: contain;
     border: 1px solid #e7e5e4;
-    border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    border-radius: 3px;
   }
   figure.fig figcaption {
     font-family: 'Inter', sans-serif;
-    font-size: 8.5pt;
+    font-size: 7.5pt;
     color: #525252;
-    line-height: 1.45;
-    margin-top: 0.45em;
-    text-align: left;
+    line-height: 1.3;
+    margin-top: 0.25em;
     font-style: italic;
   }
+  .fig-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 0.35em 0 0.5em;
+    page-break-inside: avoid;
+  }
+  figure.fig-compact img { max-height: 1.9in; }
+  figure.fig-compact figcaption { font-size: 7pt; }
 `;
 
 const md = fs.readFileSync(MD_PATH, 'utf8');
