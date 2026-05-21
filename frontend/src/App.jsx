@@ -580,7 +580,7 @@ export default function App() {
           <div className="builder">
             <BackendStatusPill status={backendStatus} />
             <span>built by</span>
-            <a href="https://odun.dev" target="_blank" rel="noreferrer">
+            <a href="https://odunayo-portfolio-eight.vercel.app" target="_blank" rel="noreferrer">
               odun.dev
             </a>
           </div>
@@ -676,7 +676,7 @@ export default function App() {
 
       <footer className="footer">
         Built with Claude · DSN × BCT Hackathon 2026 · crafted by{" "}
-        <a href="https://odun.dev" target="_blank" rel="noreferrer">
+        <a href="https://odunayo-portfolio-eight.vercel.app" target="_blank" rel="noreferrer">
           odun.dev
         </a>
       </footer>

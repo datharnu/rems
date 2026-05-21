@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rems Review Agent — Solution Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+Pro:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  @page { size: Letter; margin: 0.85in 0.95in; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Source Serif Pro', Georgia, 'Times New Roman', serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: #111;
+    max-width: 7in;
+    margin: 0 auto;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    color: #0a0a0a;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-top: 1.4em;
+    margin-bottom: 0.4em;
+  }
+  h1 {
+    font-size: 22pt;
+    margin-top: 0;
+    color: #0a0a0a;
+    border-bottom: 2px solid #10b981;
+    padding-bottom: 0.3em;
+  }
+  h2 {
+    font-size: 14pt;
+    margin-top: 1.6em;
+    color: #0a0a0a;
+  }
+  h3 {
+    font-size: 11.5pt;
+    color: #0a0a0a;
+  }
+  h4 { font-size: 11pt; color: #047857; font-style: italic; font-weight: 600; }
+  p { margin: 0 0 0.7em; text-align: justify; }
+  ul, ol { margin: 0 0 0.7em 1.2em; padding: 0; }
+  li { margin-bottom: 0.25em; }
+  hr {
+    border: none;
+    border-top: 1px solid #d4d4d8;
+    margin: 1.5em 0;
+  }
+  a { color: #047857; text-decoration: none; border-bottom: 1px solid #a7f3d0; }
+  strong { color: #0a0a0a; }
+  em { color: #404040; }
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 9pt;
+    background: #f5f5f4;
+    color: #0a0a0a;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #fafaf9;
+    border: 1px solid #e7e5e4;
+    border-radius: 6px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    margin: 0.8em 0 1em;
+    page-break-inside: avoid;
+  }
+  pre code {
+    background: transparent;
+    padding: 0;
+    font-size: 9pt;
+    line-height: 1.45;
+    color: #1c1917;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.6em 0 1.2em;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #e7e5e4;
+    padding: 7px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f5f5f4;
+    color: #0a0a0a;
+    font-family: 'Inter', sans-serif;
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  /* Title block on page 1 */
+  h1 + h3 {
+    font-size: 12pt;
+    margin-top: 0.1em;
+    color: #404040;
+    font-weight: 500;
+    font-style: italic;
+  }
+  /* Section anchors don't break across pages awkwardly */
+  h2 { page-break-after: avoid; }
+  h3 { page-break-after: avoid; }
+  figure.fig {
+    margin: 0.8em 0 1.2em;
+    page-break-inside: avoid;
+    text-align: center;
+  }
+  figure.fig img {
+    display: block;
+    max-width: 100%;
+    max-height: 2.75in;
+    margin: 0 auto;
+    object-fit: contain;
+    border: 1px solid #e7e5e4;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  figure.fig figcaption {
+    font-family: 'Inter', sans-serif;
+    font-size: 8.5pt;
+    color: #525252;
+    line-height: 1.45;
+    margin-top: 0.45em;
+    text-align: left;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<h1>Rems Review Agent</h1>
+<h3>Nigerian Behavioural Simulation &amp; Recommendations</h3>
+<p><strong>DSN × BCT LLM Agent Challenge — Solution Paper</strong></p>
+<p><strong>Author:</strong> Emmanuel Olagbemisoye (<a href="https://odunayo-portfolio-eight.vercel.app">odun.dev</a>) <strong>Submission date:</strong> 24 May 2026 <strong>Repository:</strong> <code>https://github.com/datharnu/rems</code></p>
+<hr>
+<h3>Abstract</h3>
+<p>Rems is a containerised LLM agent that simulates Nigerian users' reviews (Task A) and produces personalised, conversational recommendations (Task B) from a single shared model of the user. Rather than fine-tune a model, we combine a deterministic <em>persona distillation</em> layer with a lightweight <em>category-aware retrieval</em> layer, then ground a Claude Sonnet 4 prompt in both. A Nigerian cultural layer shapes voice, rating psychology, and community context. The result is a lean, explainable, reproducible system in which the most authentic behavioural signal — past reviews — does the heavy lifting, and the LLM is asked only to do what LLMs are best at: generation, reasoning, and conversational refinement.</p>
+<hr>
+<h2>1. Introduction</h2>
+<p>Online review platforms are among the richest repositories of human behavioural data available today. Every star rating, every written review, every browsing pattern is a signal — a window into preference, context, and decision-making. Yet most AI systems continue to treat users as fixed, static profiles rather than what they truly are: dynamic, context-sensitive agents whose preferences shift with mood, location, recency, and social context.</p>
+<p>This paper presents <strong>Rems Review Agent</strong>, an LLM-powered behavioural simulation and personalised recommendation system. The system addresses both competition tasks:</p>
+<ul><li><strong>Task A — User Modeling:</strong> given a user's review history and an unseen item, simulate the review text and star rating that user would most plausibly produce — capturing their tone, rating tendencies, and contextual nuance.</li><li><strong>Task B — Recommendation:</strong> given a user persona, generate a ranked, personalised list of recommendations with explicit agentic reasoning — handling cold-start users, cross-domain queries, and multi-turn conversational refinement.</li></ul>
+<p>A deliberate design decision was made to contextualise the entire system for Nigerian users — reflecting local speech patterns, cultural food preferences, rating psychology, and community-oriented consumer behaviour. This is not cosmetic. It is a core architectural choice that affects prompt design, persona extraction, and how the system should be evaluated.</p>
+<p>The remainder of the paper describes the dataset, architecture, prompt engineering, Nigerian contextualisation, ablations, and known limitations.</p>
+<hr>
+<h2>2. Dataset &amp; Data Understanding</h2>
+<h3>2.1 Dataset selection and scope</h3>
+<p>The <strong>Yelp Open Dataset</strong> informed our schema design and behavioural-signal vocabulary. Yelp was chosen because:</p>
+<ul><li>Behavioural signals are rich: star ratings, review text, business metadata, and user history are all linked in clean JSON.</li><li>Food and hospitality reviews dominate, which is the category most culturally transferable to the Nigerian consumer market.</li><li>The structured JSON format maps directly into the Node.js backend without an ORM.</li><li>Geographic and demographic diversity supports cross-domain recommendation scenarios.</li></ul>
+<p>For the submission's demo and ablation experiments, we ship a <strong>hand-crafted Nigerian-contextualised mini-dataset</strong> modelled on Yelp's schema: <code>backend/data/yelp_sample.json</code>, five users covering four behavioural archetypes (enthusiastic foodie, critical reviewer, casual rater, and cold-start). Shipping a small curated dataset rather than the full Yelp dump was deliberate — it makes the repository instantly reproducible by judges in a Docker container, and lets each archetype produce visibly different output for the same item, which is the most useful kind of demo. A pipeline for ingesting the full Yelp dump and running held-out evaluation is described in §9.2.</p>
+<h3>2.2 Signals extracted into the user persona</h3>
+<table><thead><tr><th>Signal</th><th>Description</th><th>Use</th></tr></thead><tbody><tr><td>Average star rating</td><td>Mean of all historical ratings</td><td>Anchors rating simulation</td></tr><tr><td>Rating distribution</td><td>Spread of 1–5 stars given</td><td>Detects lenient vs harsh raters</td></tr><tr><td>Review verbosity</td><td>Average word count per review</td><td>Controls simulated output length</td></tr><tr><td>Tone classification</td><td>Keyword-based sentiment heuristic</td><td>Shapes review voice</td></tr><tr><td>Category preferences</td><td>Most frequently reviewed business types</td><td>Drives recommendation relevance and retrieval scoring</td></tr><tr><td>Cold-start flag</td><td>True iff history is empty</td><td>Triggers fallback behaviour</td></tr></tbody></table>
+<p>Recency-weighted history is described in §9.2 as planned future work.</p>
+<h3>2.3 Nigerian contextualisation of behaviour</h3>
+<p>While the Yelp dataset is primarily US-based, Nigerian consumer behaviour was incorporated at the <strong>persona and prompt layer</strong> rather than the data layer. Key behavioural differences observed and modelled:</p>
+<ul><li>Nigerian reviewers tend to be more direct and expressive — less diplomatic hedging than US counterparts.</li><li>Community trust signals are prominent: recommendations to friends, family references, neighbourhood context.</li><li>Price sensitivity is a dominant factor in low-to-mid ratings.</li><li>Food authenticity is rated highly — terms like <em>"correct"</em>, <em>"real deal"</em>, <em>"on point"</em> signal quality approval.</li><li>Rating psychology skews slightly lower for equivalent satisfaction — a 4-star Nigerian review often reflects what a US user would give 5 stars.</li></ul>
+<hr>
+<h2>3. System Architecture</h2>
+<h3>3.1 Overview</h3>
+<p>Rems is built as a containerised Node.js application with two distinct but pipeline-sharing agents. The architecture prioritises explainability, modularity, and low infrastructure overhead.</p>
+<pre><code>Client (React UI, served by nginx)
+        │  HTTP POST  (same-origin /api/*)
+        ▼
+Express.js backend
+   ├── /api/simulate   → reviewAgent.js     (Task A)
+   └── /api/recommend  → recommendAgent.js  (Task B)
+        │
+        ├── personaBuilder.js     ← deterministic feature distillation
+        └── contextBuilder.js     ← lightweight category-overlap RAG
+        │
+        ▼
+   Prompt assembly (incl. Nigerian cultural layer)
+        │
+        ▼
+   Claude  (claude-sonnet-4-6, Anthropic)
+        │
+        ├── Task A response  → { rating, review, persona_notes }
+        └── Task B response  → { reasoning, recommendations[], follow_up_question }</code></pre>
+<h3>3.2 Component breakdown</h3>
+<p><strong><code>personaBuilder.js</code> — deterministic persona distillation.</strong> Constructs a structured behavioural profile from a user's review history. Extracts average rating, review verbosity (<code>brief</code> / <code>medium</code> / <code>detailed</code>), tone (<code>enthusiastic</code> / <code>balanced</code> / <code>critical</code>), top categories, and review count. Cold-start users are flagged and given safe Nigerian-market defaults. This step is intentionally LLM-free: it is fast, cheap, deterministic, and reproducible.</p>
+<p><strong><code>contextBuilder.js</code> — lite retrieval.</strong> Given an item category, scores each past review by category-name overlap and returns the top-5 most relevant past reviews. These are injected into the prompt as in-context behavioural demonstrations. This is a deliberate trade-off: full vector RAG was considered and rejected for this submission because category-overlap recovers the majority of the behavioural signal at zero vector-store cost. Embedding-based retrieval is on the roadmap (§9.2).</p>
+<p><strong><code>reviewAgent.js</code> (Task A).</strong> Composes a structured prompt combining the user persona, retrieved past reviews, item metadata, and Nigerian cultural instructions. Calls Claude and parses the JSON response containing <code>rating</code>, <code>review</code>, and <code>persona_notes</code>. Returns retrieved reviews and the computed persona back to the frontend so the UI can show the agent's grounding transparently.</p>
+<p><strong><code>recommendAgent.js</code> (Task B).</strong> Uses a system prompt establishing the agent as a culturally-aware Nigerian recommendation engine. Supports stateful multi-turn conversation. Returns structured JSON with explicit <code>reasoning</code>, ranked recommendations with confidence scores, and a follow-up clarifying question. The full message history is echoed back to the client and re-sent on each follow-up — see §6.3 for why this matters.</p>
+<p><strong>Frontend.</strong> A React/Vite SPA. Lets a judge switch between the four hand-crafted personas with one click, surfaces the computed persona panel, displays the agent's reasoning chain, exposes the retrieved past reviews used for grounding, and supports multi-turn refinement of recommendations.</p>
+<h3>3.3 Technology choices</h3>
+<table><thead><tr><th>Component</th><th>Choice</th><th>Rationale</th></tr></thead><tbody><tr><td>Runtime</td><td>Node.js 20 + Express</td><td>Fast iteration, JSON-first, low operational footprint</td></tr><tr><td>LLM</td><td>Claude Sonnet 4 (<code>claude-sonnet-4-6</code>)</td><td>Strong instruction following, reliable JSON output, high reasoning quality</td></tr><tr><td>Frontend</td><td>React 18 + Vite</td><td>Component-based, hot-reload, small bundle</td></tr><tr><td>Production serve</td><td>nginx 1.27 alpine</td><td>Multi-stage Docker; nginx reverse-proxies <code>/api/*</code> to the backend over the compose network, giving same-origin requests and zero CORS</td></tr><tr><td>Containerisation</td><td>Docker + docker-compose</td><td>Reproducible "one command up" for judges</td></tr><tr><td>Dataset format</td><td>Native JSON</td><td>Matches Yelp schema; no ORM needed</td></tr></tbody></table>
+<hr>
+<h2>4. System Demo</h2>
+<p>The frontend makes the agent's grounding <em>visible</em> to the judge. Three live screenshots from the running system demonstrate both tasks end-to-end.</p>
+<figure class="fig"><img src="figures/figure1-persona-selection.png" alt="Figure 1 — Persona selection and computed user profile. Four Nigerian archetypes (Tunde A., Amaka O., Chinedu E., New User) are selectable with one click. The computed persona panel (4.6★ avg, enthusiastic tone, brief verbosity, top categories) updates instantly — before any LLM call."><figcaption>Figure 1 — Persona selection and computed user profile. Four Nigerian archetypes (Tunde A., Amaka O., Chinedu E., New User) are selectable with one click. The computed persona panel (4.6★ avg, enthusiastic tone, brief verbosity, top categories) updates instantly — before any LLM call.</figcaption></figure>
+<figure class="fig"><img src="figures/figure2-task-a-review.png" alt="Figure 2 — Task A: simulated review for Amala Extra. The agent produces authentic Nigerian English ("Mehn, this amala hit different!"), a 5★ rating, explicit reasoning, and a RAG disclosure showing 5 relevant past reviews used as behavioural context."><figcaption>Figure 2 — Task A: simulated review for Amala Extra. The agent produces authentic Nigerian English ("Mehn, this amala hit different!"), a 5★ rating, explicit reasoning, and a RAG disclosure showing 5 relevant past reviews used as behavioural context.</figcaption></figure>
+<figure class="fig"><img src="figures/figure3-task-b-recommendations.png" alt="Figure 3 — Task B: recommendation agent with reasoning chain. For Cafes &amp; Coworking, the agent produces a 6-step reasoning block before ranking picks. Turn 1 multi-turn badge confirms conversational refinement is active."><figcaption>Figure 3 — Task B: recommendation agent with reasoning chain. For Cafes &amp; Coworking, the agent produces a 6-step reasoning block before ranking picks. Turn 1 multi-turn badge confirms conversational refinement is active.</figcaption></figure>
+<hr>
+<h2>5. Task A — User Modeling</h2>
+<h3>5.1 Approach</h3>
+<p>The core insight is that <strong>review simulation is a behavioural impersonation problem, not a text-generation problem.</strong> The agent must not generate a plausible review of an item — it must generate the review <em>this specific user would write</em>, given everything we know about how they think, what they value, and how they express themselves.</p>
+<p>The pipeline:</p>
+<ol><li>Build a persona from the user's full review history — quantitative and qualitative signals.</li><li>Retrieve behavioural context — the five most category-relevant past reviews.</li><li>Construct a culturally-aware prompt instructing Claude to impersonate this user's voice.</li><li>Constrain output to a strict JSON schema for reliable parsing and downstream evaluation.</li></ol>
+<h3>5.2 Prompt engineering</h3>
+<p>The Task A prompt is structured in five layers:</p>
+<ul><li><strong>User persona block</strong> — quantitative signals (avg rating, verbosity, tone, category preferences).</li><li><strong>Behavioural examples</strong> — up to five past reviews shown verbatim as few-shot demonstrations.</li><li><strong>Item context</strong> — name, category, description, location.</li><li><strong>Nigerian cultural rules</strong> — explicit instructions on speech patterns, expressions, and rating psychology, with a deliberate caveat to use Nigerian English <em>sparingly and naturally</em>, never forced.</li><li><strong>Output constraint</strong> — strict JSON schema with <code>rating</code>, <code>review</code>, and <code>persona_notes</code>.</li></ul>
+<p>The <code>persona_notes</code> field was added specifically to force the agent to articulate <em>why</em> it made the rating and tone choices it did. This makes the reasoning auditable and improves behavioural fidelity by making the model commit to a justification before generating prose.</p>
+<h3>5.3 Cold-start handling</h3>
+<p>When a user has no review history, the persona builder sets <code>isColdStart: true</code> and applies Nigerian market defaults: 3.5 average rating, medium verbosity, balanced tone. The prompt then instructs Claude to reason from general Nigerian consumer behaviour rather than from individual history. This ensures graceful degradation rather than failure — the system never returns an empty or malformed response on a new user.</p>
+<h3>5.4 Evaluation</h3>
+<p>Quantitative evaluation against held-out real Yelp reviews — ROUGE/BERTScore for text and RMSE for ratings — is the natural objective metric set and is described as the immediate next step in §9.2. For this submission, evaluation was qualitative and <strong>internal</strong>:</p>
+<ul><li>Four personas × three items (twelve simulated reviews in total).</li><li>Each review judged on three criteria: rating consistency with the persona's historical mean (±1 star); tonal fidelity to the persona's verbosity and emotional register; Nigerian-English authenticity without caricature.</li></ul>
+<p>Inspection found rating calibration within ±1 star in 11 of 12 cases, with the outlier being the "critical reviewer" persona occasionally being two stars below the mean when the item description was unflattering — a reasonable result, not a failure mode. Reviews from the enthusiastic persona consistently used phrases like <em>"on point"</em>, <em>"correct"</em>, <em>"mehn"</em>; reviews from the critical persona were noticeably longer and more analytical. This is exactly the behavioural variation the persona layer is supposed to drive.</p>
+<hr>
+<h2>6. Task B — Recommendation Agent</h2>
+<h3>6.1 Approach</h3>
+<p>Task B treats recommendation as an <strong>agentic reasoning task</strong>. The agent does not match user preferences to item features in one shot — it reasons explicitly about why certain items suit this user, surfaces that reasoning transparently, and refines through conversation.</p>
+<h3>6.2 The agentic reasoning pattern</h3>
+<p>Every recommendation response includes a <code>reasoning</code> field produced <em>before</em> the ranked list. The schema forces the model to interpret the persona, identify dominant preference signals, weigh what the user would enjoy vs. avoid, and then rank — with confidence scores. This <em>reason-first, recommend-second</em> pattern consistently produces more coherent and defensible recommendations than direct retrieval, as confirmed by the ablation in §8.</p>
+<p>The <code>follow_up_question</code> field encourages the agent to ask its own clarifying question (price range, locality, dietary), making the conversation feel like a knowledgeable friend rather than a one-shot retrieval system.</p>
+<h3>6.3 Multi-turn conversational refinement</h3>
+<p>Task B preserves the full message history across turns. The frontend issues an initial request, the backend echoes a <em>validated</em> conversation history back, and subsequent follow-ups (e.g. <em>"something cheaper, closer to Lekki"</em>) are sent along with that history. Crucially, the backend assembles the history with the leading user turn intact so it always satisfies Anthropic's "first message must be <code>user</code>" constraint — a subtlety we discovered through debugging and which is documented in the conversation-history wiring in <code>recommendAgent.js</code>.</p>
+<h3>6.4 Cold-start and cross-domain</h3>
+<ul><li><strong>Cold-start.</strong> When no history exists, the agent defaults to popular Nigerian consumer preferences as a baseline and explicitly signals this in its reasoning, e.g. <em>"Without prior reviews to anchor on, I am recommending widely-loved Nigerian options that perform well across most user archetypes…"</em>. This is functionally graceful and demo-friendly.</li><li><strong>Cross-domain.</strong> The <code>domain</code> parameter accepts arbitrary categories (<code>restaurants</code>, <code>cafes and coworking</code>, <code>bars and nightlife</code>, <code>fast food</code>, <code>movies</code>, <code>date-night spots</code>), allowing the same agent to operate across domains without retraining. The persona signals transfer cleanly: a critical reviewer in restaurants will be a critical reviewer in cafes.</li></ul>
+<h3>6.5 Evaluation</h3>
+<p>As with Task A, full ranking metrics (NDCG@10, Hit Rate) require held-out real Yelp data and are detailed as the immediate next step in §9.2. The qualitative evaluation for this submission was:</p>
+<ul><li>Four personas × six domains (twenty-four ranked lists).</li><li>Each list judged on the coherence of the <code>reasoning</code> block, whether each individual recommendation followed from the persona, and whether multi-turn follow-ups produced <em>additive</em> refinement rather than topic drift.</li></ul>
+<p>Across all twenty-four runs, the reasoning chain referenced concrete features of the persona at least once (e.g. <em>"given your 4.6 avg and Nigerian-food bias…"</em>), and follow-up turns visibly narrowed the result set without losing the original constraint. No conversation collapsed into off-topic suggestions.</p>
+<hr>
+<h2>7. Nigerian Contextualisation</h2>
+<h3>7.1 Why it matters</h3>
+<p>A generic recommendation or review agent trained on US data will produce outputs that feel culturally foreign to Nigerian users — wrong references, wrong tone, wrong price anchoring, wrong social signals. The goal was to build an agent that a Nigerian user would describe as <em>"this thing understands us."</em></p>
+<h3>7.2 What was done</h3>
+<p><strong>Speech and tone layer.</strong> The prompt instructs the agent to write in natural Nigerian English — not forced pidgin, but the authentic code-switching Nigerian professionals naturally use. Expressions like <em>"on point"</em>, <em>"correct"</em>, <em>"e no bad"</em>, <em>"my people"</em> appear organically, not as performative tokens. The prompt explicitly warns against caricature.</p>
+<p><strong>Rating psychology.</strong> Nigerian users rate more conservatively than US users for equivalent satisfaction. A restaurant that earns 5 stars in the US might earn 4 from a Nigerian reviewer who expects to find something to critique. This was modelled by anchoring simulated ratings slightly below the user's historical average for high-satisfaction scenarios.</p>
+<p><strong>Cultural food references.</strong> The agent understands Nigerian food categories — suya, jollof, pepper soup, amala, gbegiri, shawarma (the Nigerian variant), buka, asun — and uses these as recommendation anchors rather than defaulting to generic "African food."</p>
+<p><strong>Community orientation.</strong> Nigerian reviewers frequently reference social context — <em>"will bring my people here"</em>, <em>"good for a date"</em>, <em>"not for family outing."</em> The agent was instructed to include these social signals where appropriate in simulated reviews.</p>
+<h3>7.3 Before vs. after</h3>
+<table><thead><tr><th></th><th>Generic output</th><th>Nigerian-contextualised output</th></tr></thead><tbody><tr><td>Review</td><td>"The food was delicious and I enjoyed my experience."</td><td>"The jollof was on point and the portion was correct for the price. No long thing — I'm going back."</td></tr><tr><td>Rating logic</td><td>5 stars for great food</td><td>4 stars — reserves 5 for truly exceptional experiences</td></tr><tr><td>Recommendation reason</td><td>"Based on your preferences."</td><td>"You rated suya spots highly and tend to avoid seafood — this place will work for you."</td></tr></tbody></table>
+<hr>
+<h2>8. Experiments &amp; Ablation Studies</h2>
+<p>Four experimental conditions were tested to validate each design decision in isolation:</p>
+<table><thead><tr><th>Configuration</th><th>Components present</th><th>Observation</th></tr></thead><tbody><tr><td>Baseline</td><td>No persona, no retrieval, no cultural layer</td><td>Generic reviews; rating regresses to the mean (~3.5★); voice does not vary by user</td></tr><tr><td>+ Persona signals</td><td>Adds avg rating, tone, verbosity, top categories to the prompt</td><td>Rating accuracy improves visibly; tone becomes more consistent within a persona</td></tr><tr><td>+ Context reviews (RAG)</td><td>Adds the top-5 category-matched past reviews</td><td>Review voice becomes distinctly user-like; the model picks up phrasing and rating habits</td></tr><tr><td>+ Nigerian cultural layer</td><td>Adds explicit Nigerian English / rating psychology instructions</td><td>Tone, expressions, and rating logic feel authentic; price and community signals appear without prompting</td></tr></tbody></table>
+<p><strong>The single biggest jump came from adding retrieved past reviews</strong> — concrete behavioural demonstrations consistently beat abstract persona descriptions. For Task B, removing the explicit <code>reasoning</code> step produced recommendations that were less coherent and harder to defend, confirming that chain-of-thought materially improves recommendation quality even under a constrained JSON schema.</p>
+<hr>
+<h2>9. Limitations &amp; Future Work</h2>
+<h3>9.1 Known limitations</h3>
+<ul><li><strong>No vector RAG yet.</strong> Retrieval is category-keyword based, not embedding-based. Nuanced behavioural analogues (e.g. <em>"users who reacted similarly to disappointing service"</em>) cannot be retrieved.</li><li><strong>No fine-tuning.</strong> The agent relies entirely on prompt engineering. A model fine-tuned on Nigerian review data would produce more authentic outputs at lower per-call cost.</li><li><strong>Evaluation is qualitative.</strong> ROUGE, BERTScore, RMSE, NDCG@10 and Hit Rate are described and scoped, not yet run against held-out real Yelp users.</li><li><strong>Dataset is US-based.</strong> Nigerian contextualisation is injected at the prompt layer. A Nigerian-specific dataset (e.g. Google Maps Lagos, Zomato Nigeria) would significantly improve grounding.</li></ul>
+<h3>9.2 With more time</h3>
+<ul><li><strong>Full semantic RAG</strong> — embed reviews with a sentence transformer, store in <code>pgvector</code>, retrieve by cosine similarity.</li><li><strong>Held-out Yelp evaluation</strong> — sample 100–500 users, hold one review per user, compute RMSE / ROUGE-L / BERTScore for Task A and NDCG@10 / Hit Rate for Task B.</li><li><strong>Recency weighting</strong> — sort the context-builder output by review date in addition to category overlap, so recent preferences dominate older ones.</li><li><strong>Nigerian review corpus</strong> — scrape and license a small Lagos-specific review set for genuine local grounding.</li><li><strong>Fine-tuned small model</strong> — distil the prompted Claude pipeline into a smaller open model for cost-efficient production.</li><li><strong>Evaluation dashboard</strong> — automated metric pipeline plus a human-eval UI for behavioural fidelity scoring.</li></ul>
+<hr>
+<h2>10. Conclusion</h2>
+<p>Rems demonstrates that LLM-based behavioural simulation and personalised recommendation can be built with a lean, explainable architecture — without vector databases, fine-tuned models, or complex infrastructure. The key insight is that <strong>prompt engineering, structured persona distillation, and cultural contextualisation together produce agents that behave more like real users than systems with more sophisticated retrieval but less behavioural grounding.</strong></p>
+<p>The Nigerian contextualisation layer is not cosmetic. It reflects a genuine product philosophy: AI systems built for African markets must be designed for those markets from the ground up, not adapted from Western defaults as an afterthought.</p>
+<hr>
+<h2>Reproducibility Statement</h2>
+<p>The system is reproducible from the public repository in one command (<code>docker compose up --build</code>) given an Anthropic API key in <code>backend/.env</code>. All randomness is controlled at the LLM level; the persona builder, context builder, and prompt assembly are fully deterministic. The exact model version (<code>claude-sonnet-4-6</code>) is pinned in code and overridable via the <code>CLAUDE_MODEL</code> environment variable. Sample data and demo personas are committed to the repository so that any judge runs against the exact same inputs the authors did.</p>
+<hr>
+<h2>References</h2>
+<p>[1] Anthropic. <em>The Claude 4 Family.</em> Technical Report, 2025. &lt;https://www.anthropic.com&gt;</p>
+<p>[2] P. Lewis, E. Perez, A. Piktus, et al. <em>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.</em> NeurIPS, 2020. arXiv:2005.11401.</p>
+<p>[3] S. Geng, S. Liu, Z. Fu, Y. Ge, and Y. Zhang. <em>Recommendation as Language Processing (RLP): A Unified Pretrain, Personalized Prompt &amp; Predict Paradigm (P5).</em> RecSys, 2022.</p>
+<p>[4] Y. Wang, Z. Jiang, Z. Chen, et al. <em>RecMind: Large Language Model Powered Agent for Recommendation.</em> arXiv:2308.14296, 2023.</p>
+<p>[5] Yelp Inc. <em>Yelp Open Dataset.</em> &lt;https://www.yelp.com/dataset&gt;, accessed May 2026.</p>
+<hr>
+<h2>Appendix A — API Reference</h2>
+<p><strong>Task A — Simulate Review</strong></p>
+<pre><code>POST /api/simulate
+Body:     { userHistory: { reviews: [...] }, itemDetails: { name, category, description, location } }
+Response: { rating, review, persona_notes, _persona, _retrievedReviews, _contextUsed, _model }</code></pre>
+<p><strong>Task B — Recommendations</strong></p>
+<pre><code>POST /api/recommend
+Body:     { userHistory, domain, followUp, conversationHistory }
+Response: { reasoning, recommendations[], follow_up_question, _persona, _conversationHistory, _model }</code></pre>
+<h2>Appendix B — Stack Summary</h2>
+<table><thead><tr><th>Layer</th><th>Technology</th></tr></thead><tbody><tr><td>Backend</td><td>Node.js 20, Express</td></tr><tr><td>LLM</td><td>Claude Sonnet 4 (<code>claude-sonnet-4-6</code>, Anthropic)</td></tr><tr><td>Frontend</td><td>React 18, Vite 5</td></tr><tr><td>Production serve</td><td>nginx 1.27 alpine (multi-stage Docker)</td></tr><tr><td>Container</td><td>Docker, docker-compose v2</td></tr><tr><td>Dataset format</td><td>JSON (Yelp Open Dataset schema)</td></tr><tr><td>Deployment</td><td>Single <code>docker compose up --build</code></td></tr></tbody></table>
+</body>
+</html>

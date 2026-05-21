@@ -3,7 +3,11 @@
 > **A behavioral simulation & recommendation agent for the Nigerian consumer market.**
 > Built on Claude. Engineered for authenticity. Single-command demo.
 
-**DSN × BCT LLM Agent Challenge — Solo submission by [odun.dev](https://odun.dev)**
+**DSN × BCT LLM Agent Challenge — Solo submission by [odun.dev](https://odunayo-portfolio-eight.vercel.app)**
+
+**Repository:** [github.com/datharnu/rems](https://github.com/datharnu/rems)
+
+📄 **Solution paper:** [`paper/Rems_Solution_Paper.pdf`](./paper/Rems_Solution_Paper.pdf) — read this first. *(Source: `paper/Rems_Solution_Paper.md` · rebuild: `node paper/build_pdf.mjs`)*
 
 ---
 
@@ -181,6 +185,11 @@ hackathon/
 │   ├── nginx.conf                   # SPA fallback + /api reverse proxy
 │   ├── Dockerfile                   # multi-stage: Node build → nginx runtime
 │   └── package.json
+├── paper/
+│   ├── Rems_Solution_Paper.pdf      # 4–8 page write-up (read first)
+│   ├── Rems_Solution_Paper.md       # source markdown
+│   ├── build_pdf.mjs                # rebuild script
+│   └── figures/                     # demo screenshots (Figures 1–3)
 ├── docker-compose.yml               # healthcheck-gated, networked
 ├── .gitignore                       # protects .env at every depth
 └── README.md
