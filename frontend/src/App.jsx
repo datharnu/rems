@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./app.css";
 import { PERSONAS, PERSONA_KEYS } from "./personas.js";
-
-// Same-origin requests. In dev, Vite proxies /api -> backend:3001.
-// In Docker, nginx reverse-proxies /api -> backend:3001 via the compose network.
-const API_BASE = "/api";
+import { API_BASE, HEALTH_URL } from "./config.js";
 
 const SAMPLE_ITEM = {
   name: "Yellow Chilli Lagos",
@@ -79,7 +76,7 @@ function useBackendHealth() {
     let cancelled = false;
     const ping = async () => {
       try {
-        const r = await fetch("/health");
+        const r = await fetch(HEALTH_URL);
         if (!cancelled) setStatus(r.ok ? "online" : "offline");
       } catch {
         if (!cancelled) setStatus("offline");

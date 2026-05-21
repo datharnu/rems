@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
 app.get('/health', (req, res) =>
-  res.json({ status: 'ok', agent: 'Naija Review Agent' })
+  res.json({ status: 'ok', agent: 'Rems Review Agent' })
 );
 
 app.use('/api/simulate', simulateRouter);
